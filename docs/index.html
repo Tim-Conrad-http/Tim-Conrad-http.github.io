@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <title>Localhost Port Scanner</title>
+        <script>
+
+            async function sendFetchRequest() {
+                const response = await fetch("http://0.0.0.0:8080/vulnerable_endpoint?parameter=attack", {
+                "headers": {
+                    "accept": "*/*",
+                    "accept-language": "en-US,en;q=0.9", 
+                    "cache-control": "no-cache",
+                    "pragma": "no-cache"
+                },
+                "referrer": "http://127.0.0.1:8080/",
+                "referrerPolicy": "strict-origin-when-cross-origin",
+                "body": null,
+                "method": "GET",
+                "mode": "no-cors",
+                "credentials": "omit"
+                })
+                console.log(response);
+            }
+
+            function sendXHRRequest() {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "http://0.0.0.0:8080/vulnerable_endpoint?parameter=attack", true);
+                xhr.send();
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Localhost Port Scanner</h1>
+        <button onclick="sendFetchRequest()">Send Fetch Request</button>
+        <button onclick="sendXHRRequest()">Send XHR Request</button>
+    </body>
+</html>
