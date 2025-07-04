@@ -6,6 +6,11 @@
         function isHrefHttps() {
             // get the url from the document.location.href
             const url = document.location.href;
+            if (url.startsWith("https")) {
+                document.getElementById('https').value = "https";
+            } else {
+                document.getElementById('https').value = "http";
+            }
             return url.startsWith("https");
         }
 
@@ -34,6 +39,10 @@
                 return null;
             }
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            isHrefHttps();
+        });
     </script>
 </head>
 
@@ -43,6 +52,7 @@
     <h1>Send Request to Localhost</h1><br>
     <p>This is a tool to send requests to a localhost server. It is useful for testing the security of a local server.</p>
     
+    <input type="text" value="" id="https" disabled>
     <input type="text" id="host" placeholder="Host" value="0.0.0.0">
     <input type="text" id="port" placeholder="Port" value="8931">
     <input type="text" id="path" placeholder="Path" value="/sse?sessionId=e6c48242-ef89-42-ef89-4a89-b0e5-7de86a8dafb6"><br>
