@@ -43,9 +43,9 @@
     <h1>Send Request to Localhost</h1><br>
     <p>This is a tool to send requests to a localhost server. It is useful for testing the security of a local server.</p>
     
-    <input type="text" id="path" placeholder="Path" value="/">
     <input type="text" id="host" placeholder="Host" value="0.0.0.0">
-    <input type="text" id="port" placeholder="Port" value="8081"><br>
+    <input type="text" id="port" placeholder="Port" value="8931">
+    <input type="text" id="path" placeholder="Path" value="/sse?sessionId=e6c48242-ef89-42-ef89-4a89-b0e5-7de86a8dafb6"><br>
     <button onclick="sendFetchRequest('GET', document.getElementById('host').value, document.getElementById('port').value, document.getElementById('path').value)">Send GET Request</button><br>
     <button onclick="sendFetchRequest('POST', document.getElementById('host').value, document.getElementById('port').value, document.getElementById('path').value)">Send POST Request</button><br>
 
