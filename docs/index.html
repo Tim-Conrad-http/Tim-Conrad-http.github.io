@@ -27,8 +27,11 @@
                 xhr.send();
             }
 
-            function portScan() {
-                for (let port = 1; port <= 65535; port++) {
+            function portScan(startPort=1, endPort=65535) {
+                if (startPort > endPort) {
+                    [startPort, endPort] = [endPort, startPort];
+                }
+                for (let port = startPort; port <= endPort; port++) {
                     sendFetchRequest(port);
                 }
             }
@@ -36,9 +39,11 @@
     </head>
     <body>
         <h1>Localhost Port Scanner</h1>
-        <button onclick="portScan()">Port Scan</button><br>
+        <input type="text" id="startPort" placeholder="Start Port"><br>
+        <input type="text" id="endPort" placeholder="End Port"><br> 
+        <button onclick="portScan(document.getElementById('startPort').value, document.getElementById('endPort').value)">Port Scan</button><br><br>
 
-
+        <h1>Send Request</h1><br>
 
         <input type="text" id="port" placeholder="Port"><br>
         <input type="checkbox" id="https" checked>
