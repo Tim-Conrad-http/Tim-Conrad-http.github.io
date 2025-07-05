@@ -14,7 +14,7 @@
             return url.startsWith("https");
         }
 
-        async function sendFetchRequest(verb="GET", host = "0.0.0.0", port = 8080, path="/vulnerable_endpoint?parameter=attack") {
+        async function sendFetchRequest(verb="GET", host = "0.0.0.0", port = 8080, path="/vulnerable_endpoint?parameter=attack", data={}) {
             https = isHrefHttps();
             try {
                 const response = await fetch(`${https ? "https" : "http"}://${host}:${port}${path}`, {
@@ -29,14 +29,37 @@
                     "body": null,
                     "method": verb,
                     "mode": "no-cors",
-                    "credentials": "omit"
+                    "credentials": "omit",
+                    "body": JSON.stringify(data)
                 })
                 // console.log(response);
-                document.getElementById('output').innerHTML += `Response: ${response}\n`;
+                document.getElementById('output').innerHTML += `Response: ${JSON.stringify(response)}\n`;
                 return response;
             } catch (error) {
                 // console.log(error);
                 return null;
+            }
+        }
+
+        async function initSSE(host = "0.0.0.0", port = 8080, path="/sse") {
+            https = isHrefHttps();
+            const eventSource = new EventSource(`${https ? "https" : "http"}://${host}:${port}${path}`, {
+                "headers": {
+                    "accept": "*/*",
+                    "accept-language": "en-US,en;q=0.9",
+                    "cache-control": "no-cache",
+                    "pragma": "no-cache"
+                },
+                "referrer": `${https ? "https" : "http"}://127.0.0.1:${port}/`,
+                "referrerPolicy": "strict-origin-when-cross-origin",
+                "mode": "no-cors",
+                "credentials": "omit",
+            });
+            eventSource.onmessage = function(event) {
+                document.getElementById('output').innerHTML += `SSE Event: ${JSON.parse(event.data)}\n`;
+            }
+            eventSource.onerror = function(event) {
+                document.getElementById('output').innerHTML += `SSE Error: ${JSON.stringify(event)}\n`;
             }
         }
 
@@ -55,12 +78,18 @@
     <input type="text" value="" id="https" disabled>
     <input type="text" id="host" placeholder="Host" value="0.0.0.0">
     <input type="text" id="port" placeholder="Port" value="8931">
-    <input type="text" id="path" placeholder="Path" value="/sse?sessionId=e6c48242-ef89-42-ef89-4a89-b0e5-7de86a8dafb6"><br>
+    <input type="text" id="path" placeholder="Path" value="/sse"> 
     <button onclick="sendFetchRequest('GET', document.getElementById('host').value, document.getElementById('port').value, document.getElementById('path').value)">Send GET Request</button><br>
-    <button onclick="sendFetchRequest('POST', document.getElementById('host').value, document.getElementById('port').value, document.getElementById('path').value)">Send POST Request</button><br>
+
+    <br>
+    <input type="text" id="data" placeholder="json body" value="{}">
+    <button onclick="sendFetchRequest('POST', document.getElementById('host').value, document.getElementById('port').value, document.getElementById('path').value, JSON.parse(document.getElementById('data').value))">Send POST Request</button><br>
+
+    <br>
+    <button onclick="initSSE(document.getElementById('host').value, document.getElementById('port').value)">Init SSE</button><br>
 
     <h1>Output</h1><br>
-    <pre id="output"></pre>
+    <pre style="white-space: pre-wrap;" id="output"></pre>
 </body>
 
 </html>
